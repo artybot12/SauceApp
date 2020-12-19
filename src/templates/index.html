@@ -34,7 +34,7 @@
     </body>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script>
         function getSauce() {
@@ -50,10 +50,25 @@
                 contentType: false,
                 cache: false,
                 processData: false,
+
                 success: function(data) {
-                    swal(
-                        "Bruh", data.title
-                    );
+                    Swal.fire({
+                        title: data.title,
+                        text: data.title2,
+                        footer: 'Season: '+ data.season + '. Ep: ' + data.episode + '. At: ' + data.time,
+                        imageUrl: data.preview,
+                        confirmButtonText: 'Deeper Search',
+                        backdrop: 'rgba(117,176,221,0.2)',
+                        width: '500px',
+                        height: '700px'
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: data.title,
+                            text: "placeholder",
+                            backdrop: 'rgba(117,176,221,0.2)'
+                        });
+                    }});
                 }
             });
         }
