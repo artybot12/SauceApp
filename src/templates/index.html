@@ -59,8 +59,9 @@
                         imageUrl: data.preview,
                         confirmButtonText: 'Deeper Search',
                         backdrop: 'rgba(117,176,221,0.2)',
-                        width: '500px',
-                        height: '700px'
+                        width: '400px',
+                        height: '700px',
+                        showLoaderOnConfirm: true
                     }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire({
