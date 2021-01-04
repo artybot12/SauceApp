@@ -61,18 +61,49 @@
                         backdrop: 'rgba(117,176,221,0.2)',
                         width: '400px',
                         height: '700px',
-                        showLoaderOnConfirm: true
+                        showLoaderOnConfirm: true,
                     }).then((result) => {
                     if (result.isConfirmed) {
-                        Swal.fire({
-                            title: data.title,
-                            text: "placeholder",
-                            backdrop: 'rgba(117,176,221,0.2)'
-                        });
+                        getFullSauce(data.title);
                     }});
                 }
             });
-        }
+        };
+
+        function getFullSauce(titleVar){
+            var endpoint = '/full';
+            var formData = new FormData();
+            formData.append("title", titleVar);
+            $.ajax({
+                type: 'POST',
+                url: endpoint,
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+
+                success: function(data) {
+                    Swal.fire({
+                            title: data.title,
+                            text: data.synopsis,
+                            html:        
+                            '<summary style="text-align: justify;">'+data.synopsis+'</summary>' +
+                            '<hr><p><br></p>' +
+                            '<ul>'+
+                                '<li style="text-align: justify;">Type: <strong>'+data.type+'</strong></li>' +
+                                '<li style="text-align: justify;">Rated: <strong>'+data.rated+'</strong></li>' +
+                                '<li style="text-align: justify;">Score: <strong>'+data.score+'</strong></li>' +
+                                '<li style="text-align: justify;">Episodes: <strong>'+data.episodes+'</strong></li>' +
+                                '<li style="text-align: justify;">Currently Airing: <strong>'+data.airing+'</strong> | Aired From: '+data.start_date+' : '+data.end_date+'</li>' +
+                            '</ul>',
+                            imageUrl: data.image_url,
+                            backdrop: 'rgba(117,176,221,0.2)',
+                            width: '400px',
+                            height: '700px'
+                        });
+                }
+            });
+        };
     </script>
 
 

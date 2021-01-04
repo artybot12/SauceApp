@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, UploadFile, File
+from fastapi import FastAPI, Request, UploadFile, File, Form
 from fastapi.templating import Jinja2Templates
 import os
 import shutil
@@ -18,9 +18,36 @@ def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
+@app.post("/full")
+async def full(title: str = Form(...)):
+    try:
+        args = title.replace(" ", "%20")
+        url = "https://api.jikan.moe/v3/search/anime?q=" + args + "&limit=1"
+        r = await get_data_2(url)
+        data = r.json()
+        data = data['results'][0]
+
+        return {"success": "400",
+                "url": data["url"],
+                "image_url": data["image_url"],
+                "title": data["title"],
+                "airing": data["airing"],
+                "synopsis": data["synopsis"],
+                "type": data["type"],
+                "episodes": data["episodes"],
+                "score": data["score"],
+                "start_date": data["start_date"][:10],
+                "end_date": data["end_date"][:10],
+                "rated": data["rated"]
+                }
+    except Exception:
+        return
+
+
 @app.post("/sauce")
 async def sauce(image: UploadFile = File(...)): 
     temp_file = _save_file_to_disk(image, path="temp", save_as="temp")
+
     if not temp_file:
         return
 
@@ -63,8 +90,12 @@ def _save_file_to_disk(uploaded_file, path=".", save_as="default"):
     return 
 
 
-async def get_data(image):
+async def get_data(image: object):
     return tracemoe.search(image, encode=True)
+
+
+async def get_data_2(url: str):
+    return requests.get(url)
 
 
 if __name__ == "__main__":
