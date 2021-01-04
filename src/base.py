@@ -98,5 +98,5 @@ async def get_data_2(url: str):
     return requests.get(url)
 
 
-if __name__ == "__main__":
-    uvicorn.run("base:app", port=8000, reload=True)
+# if __name__ == "__main__":
+#     uvicorn.run("base:app", port=8000, reload=True)
